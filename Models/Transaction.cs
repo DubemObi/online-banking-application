@@ -7,20 +7,36 @@ namespace Banking.Models
     public class Transaction
     {
         public int TransactionId { get; set; }
-        public string SourceAccount { get; set; }
-        public string DestAccount { get; set; }
-        public double Amount { get; set; }
-        public TransactionStatus Status {get; set;}
-        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+        public decimal Amount { get; set; }
 
-    
+        public TransactionStatus Status {get; set;}
+        public TransactionType TransactionType { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+        public string? Description { get; set; } 
+
+        
 
         [JsonIgnore]
-        public List<BankAccount>? BankAccounts { get; set; }
+        public BankAccount AccountID { get; set; }
+        public BankAccount BankAccount { get; set; } 
+        [JsonIgnore] 
+        public int? RecipientAccountId { get; set; }
+        public BankAccount? RecipientAccount { get; set; }
+
     }
 
     public enum TransactionStatus
     {
-        
+        Pending,
+        Completed,
+        Failed,
+        Reversed
+    }
+
+    public enum TransactionType
+    {
+        Deposit,
+        Withdrawal,
+        Transfer
     }
 }

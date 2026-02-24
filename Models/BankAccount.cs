@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Banking.Models
 {
     public class BankAccount
     {
-        public string AccountID { get; set; }
+        [Key]
+        public int AccountId { get; set; }
         public string AccountNumber { get; set; }
         public string AccountName { get; set; }
         public double AccountBalance { get; set; }

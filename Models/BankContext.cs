@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Banking.Models
 {
-public class BankContext : DbContext
+    public class BankContext : DbContext
     {
         public BankContext(DbContextOptions<BankContext> options) : base(options)
         {
@@ -13,5 +13,5 @@ public class BankContext : DbContext
         public DbSet<User> Users { get; set; }
         public DbSet<Card> Cards { get; set; }
         public DbSet<Loan> Loans { get; set; }
-	}
+    }
 }

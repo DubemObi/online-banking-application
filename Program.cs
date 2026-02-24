@@ -1,4 +1,5 @@
 using Banking.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<BankContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Connection")));
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+.AddEntityFrameworkStores<BankContext>().AddDefaultTokenProviders();
 
 var app = builder.Build();
 

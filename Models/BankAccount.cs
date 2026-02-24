@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Banking.Models
 {
@@ -16,9 +17,11 @@ namespace Banking.Models
         public AccountType AccountType { get; set; }
         public AccountStatus AccountStatus { get; set; }
 
+        [JsonIgnore]
         public int UserId { get; set; }
+        [JsonIgnore]
         public User User { get; set; }
-
+        [JsonIgnore]
         public List<Transaction> Transactions { get; set; }
     }
 

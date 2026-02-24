@@ -277,3 +277,4 @@
 /Users/w2161030/Library/CloudStorage/OneDrive-UniversityofWestminster/2nd Semester/Web Application Development/banking/obj/Debug/net8.0/banking.pdb
 /Users/w2161030/Library/CloudStorage/OneDrive-UniversityofWestminster/2nd Semester/Web Application Development/banking/obj/Debug/net8.0/banking.genruntimeconfig.cache
 /Users/w2161030/Library/CloudStorage/OneDrive-UniversityofWestminster/2nd Semester/Web Application Development/banking/obj/Debug/net8.0/ref/banking.dll
+/Users/w2161030/Library/CloudStorage/OneDrive-UniversityofWestminster/2nd Semester/Web Application Development/banking/bin/Debug/net8.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll

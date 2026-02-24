@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Banking.Models
 {
-    public class BankContext : DbContext
+    public class BankContext : IdentityDbContext<ApplicationUser>
     {
         public BankContext(DbContextOptions<BankContext> options) : base(options)
         {

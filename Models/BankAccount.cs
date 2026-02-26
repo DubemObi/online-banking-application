@@ -8,9 +8,14 @@ namespace Banking.Models
     {
         [Key]
         public int AccountId { get; set; }
+        
+        [Required]
+        [StringLength(20, MinimumLength = 5)]
         public string AccountNumber { get; set; }
+        [Required]
+        [StringLength(100)]
         public string AccountName { get; set; }
-        public double AccountBalance { get; set; }
+        public decimal AccountBalance { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

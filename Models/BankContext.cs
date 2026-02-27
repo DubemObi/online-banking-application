@@ -17,5 +17,16 @@ namespace Banking.Models
         public DbSet<CardRequest> CardRequests { get; set; }
         public DbSet<Loan> Loans { get; set; }
         public DbSet<LoanRequest> LoanRequests { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<BankAccount>()
+            .Property(b => b.AccountBalance)
+            .HasColumnType("decimal(18,2)");
+
+        modelBuilder.Entity<Transaction>()
+            .Property(t => t.Amount)
+            .HasColumnType("decimal(18,2)");
+    }
     }
 }

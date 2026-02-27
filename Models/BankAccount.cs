@@ -8,7 +8,7 @@ namespace Banking.Models
     {
         [Key]
         public int AccountId { get; set; }
-        
+
         [Required]
         [StringLength(20, MinimumLength = 5)]
         public string AccountNumber { get; set; }
@@ -17,6 +17,8 @@ namespace Banking.Models
         public string AccountName { get; set; }
         public decimal AccountBalance { get; set; }
 
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public AccountType AccountType { get; set; }
@@ -27,6 +29,26 @@ namespace Banking.Models
         public User User { get; set; }
         [JsonIgnore]
         public List<Transaction> Transactions { get; set; }
+
+
+        public void Deposit(decimal amount)
+        {
+            if (amount <= 0)
+                throw new ArgumentException("Invalid deposit amount");
+
+            AccountBalance += amount;
+        }
+
+        public void Withdraw(decimal amount)
+        {
+            if (amount <= 0)
+                throw new ArgumentException("Invalid withdrawal amount");
+
+            if (AccountBalance < amount)
+                throw new InvalidOperationException("Insufficient funds");
+
+            AccountBalance -= amount;
+        }
     }
 
     public enum AccountType

@@ -5,6 +5,8 @@ using Banking.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Banking.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +16,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
+// builder.Services.AddDbContext<SchoolContext>(options =>
+// options.UseSqlite(builder.Configuration.GetConnectionString("Connection")));
+// builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+//     .AddEntityFrameworkStores<SchoolContext>().AddDefaultTokenProviders();
+
 builder.Services.AddDbContext<BankContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Connection")));
+    // builder.Services.AddDbContext<BankContext>(options =>
+    // options.UseSqlServer(builder.Configuration.GetConnectionString("BankingContext") ?? throw new InvalidOperationException("Connection string 'BankingContext' not found.")));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 .AddEntityFrameworkStores<BankContext>().AddDefaultTokenProviders();
@@ -24,6 +33,15 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 builder.Services.AddScoped<EmailService>();
 
 builder.Services.AddScoped<IBankAccountService, BankAccountService>();
+builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
+
+builder.Services.AddScoped<ILoanRequestService, LoanRequestService>();
+builder.Services.AddScoped<ILoanRequestRepository, LoanRequestRepository>();
+
+builder.Services.AddScoped<ILoanService, LoanService>();
+builder.Services.AddScoped<ILoanRepository, LoanRepository>();
+
+// builder.Services.AddScoped<ICardRequestService, CardRequestService>();
 
 builder.Services.AddScoped<RolesController>();
 

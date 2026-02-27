@@ -14,6 +14,8 @@ namespace Banking.Models
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Card> Cards { get; set; }
+        public DbSet<CardRequest> CardRequests { get; set; }
         public DbSet<Loan> Loans { get; set; }
+        public DbSet<LoanRequest> LoanRequests { get; set; }
     }
 }

@@ -4,52 +4,41 @@ using Microsoft.EntityFrameworkCore;
 
 public class BankAccountService : IBankAccountService
 {
-    private readonly BankContext _context;
+    private readonly IBankAccountRepository _bankAccountRepository;
 
-    public BankAccountService(BankContext context)
+    public BankAccountService(IBankAccountRepository bankAccountRepository)
     {
-        _context = context;
+        _bankAccountRepository = bankAccountRepository;
     }
 
     public async Task<BankAccount> AddBankAccountAsync(BankAccount bankAccount)
     {
-        _context.BankAccounts.Add(bankAccount);
-        await _context.SaveChangesAsync();
+        await _bankAccountRepository.AddAsync(bankAccount);
         return bankAccount;
     }
 
     public async Task<BankAccount> GetBankAccountByIdAsync(int accountId)
     {
-        return await _context.BankAccounts.FindAsync(accountId);
+        return await _bankAccountRepository.GetByIdAsync(accountId);
     }
 
     public async Task<IEnumerable<BankAccount>> GetAllBankAccountsAsync()
     {
-        return await _context.BankAccounts.ToListAsync();
+        return await _bankAccountRepository.GetAllAsync();
     }
 
     public async Task<BankAccount> UpdateBankAccountAsync(int accountId, BankAccount bankAccount)
     {
-        var existingAccount = await _context.BankAccounts.FindAsync(accountId);
-        if (existingAccount == null) return null;
-
-        existingAccount.AccountNumber = bankAccount.AccountNumber;
-        existingAccount.AccountName = bankAccount.AccountName;
-        existingAccount.AccountBalance = bankAccount.AccountBalance;
-        existingAccount.AccountType = bankAccount.AccountType;
-        existingAccount.AccountStatus = bankAccount.AccountStatus;
-
-        await _context.SaveChangesAsync();
-        return existingAccount;
+         await _bankAccountRepository.UpdateAsync(bankAccount);
+         return bankAccount;
     }
 
     public async Task<bool> DeleteBankAccountAsync(int accountId)
     {
-        var account = await _context.BankAccounts.FindAsync(accountId);
+        var account = await _bankAccountRepository.GetByIdAsync(accountId);
         if (account == null) return false;
 
-        _context.BankAccounts.Remove(account);
-        await _context.SaveChangesAsync();
+        await _bankAccountRepository.DeleteAsync(accountId);
         return true;
     }
 }

@@ -22,24 +22,24 @@ namespace banking.Controllers
             _logger = logger;
         }
 
-        // GET: api/BankAccount
+        // GET: api/BankAccounts
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BankAccount>>> GetBankAccounts()
         {
             try
             {
-            _logger.LogInformation("Retrieving all bank accounts.");
-            var bankAccounts = await _bankAccountService.GetAllBankAccountsAsync();
-            if (bankAccounts == null || !bankAccounts.Any())
-            {
-                _logger.LogWarning("No bank accounts found.");
-                return NotFound("No bank accounts found.");
-            }
-            return Ok(bankAccounts);
+                _logger.LogInformation("Fetching all bank accounts.");
+                var bankAccounts = await _bankAccountService.GetAllBankAccountsAsync();
+                if (bankAccounts == null || !bankAccounts.Any())
+                {
+                    _logger.LogWarning("No bank accounts found.");
+                    return NotFound("No bank accounts found.");
+                }
+                return Ok(bankAccounts);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while retrieving bank accounts.");
+                _logger.LogError(ex, "An error occurred while fetching bank accounts.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
         }
@@ -49,25 +49,26 @@ namespace banking.Controllers
         public async Task<ActionResult<BankAccount>> GetBankAccount(int id)
         {
             try
-            {_logger.LogInformation($"Retrieving bank account with ID {id}.");
-            var bankAccount = await _bankAccountService.GetBankAccountByIdAsync(id);
-            if (bankAccount == null)
             {
-                _logger.LogWarning($"Bank account with ID {id} not found.");
-                return NotFound($"Bank account with ID {id} not found.");
-            }
-            
-            return Ok(bankAccount);
+                _logger.LogInformation($"Fetching bank account with ID {id}");
+                var bankAccount = await _bankAccountService.GetBankAccountByIdAsync(id);
+
+                if (bankAccount == null)
+                {
+                    _logger.LogWarning($"Bank account with ID {id} not found.");
+                    return NotFound($"Bank account with ID {id} not found.");
+                }
+
+                return Ok(bankAccount);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occurred while retrieving bank account with ID {id}.");
+                _logger.LogError(ex, "An error occurred while fetching the bank account.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
         }
 
-        // PUT: api/BankAccount/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/BankAccounts/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBankAccount(int id, BankAccount bankAccount)
         {
@@ -75,20 +76,20 @@ namespace banking.Controllers
             {
                 if (id != bankAccount.AccountId)
                 {
-                    _logger.LogWarning("Bank Account ID mismatch.");
-                    return BadRequest("Bank Account ID mismatch.");
+                    _logger.LogWarning("Bank account ID mismatch.");
+                    return BadRequest("Bank account ID mismatch.");
                 }
 
                 await _bankAccountService.UpdateBankAccountAsync(id, bankAccount);
-                _logger.LogInformation($"Bank Account with ID {id} updated.");
+                _logger.LogInformation($"Bank account with ID {id} updated.");
                 return NoContent();
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (await _bankAccountService.GetBankAccountByIdAsync(id) == null)
                 {
-                    _logger.LogWarning($"Bank Account with ID {id} not found for update.");
-                    return NotFound($"Bank Account with ID {id} not found.");
+                    _logger.LogWarning($"Bank account with ID {id} not found for update.");
+                    return NotFound($"Bank account with ID {id} not found.");
                 }
                 else
                 {
@@ -103,21 +104,20 @@ namespace banking.Controllers
             }
         }
 
-        // POST: api/BankAccount
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/BankAccounts
         [HttpPost]
         public async Task<ActionResult<BankAccount>> PostBankAccount(BankAccount bankAccount)
         {
-           try
+            try
             {
                 if (bankAccount == null)
                 {
                     _logger.LogWarning("Received empty bank account object.");
-                    return BadRequest("Bank Account data cannot be null.");
+                    return BadRequest("Bank account data cannot be null.");
                 }
 
                 await _bankAccountService.AddBankAccountAsync(bankAccount);
-                _logger.LogInformation($"Bank Account with ID {bankAccount.AccountId} created.");
+                _logger.LogInformation($"Bank account with ID {bankAccount.AccountId} created.");
                 return CreatedAtAction("GetBankAccount", new { id = bankAccount.AccountId }, bankAccount);
             }
             catch (Exception ex)
@@ -125,9 +125,9 @@ namespace banking.Controllers
                 _logger.LogError(ex, "An error occurred while creating the bank account.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
-            }
+        }
 
-        // DELETE: api/BankAccount/5
+        // DELETE: api/BankAccounts/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBankAccount(int id)
         {
@@ -136,12 +136,12 @@ namespace banking.Controllers
                 var bankAccount = await _bankAccountService.GetBankAccountByIdAsync(id);
                 if (bankAccount == null)
                 {
-                    _logger.LogWarning($"Bank Account with ID {id} not found.");
-                    return NotFound($"Bank Account with ID {id} not found.");
+                    _logger.LogWarning($"Bank account with ID {id} not found.");
+                    return NotFound($"Bank account with ID {id} not found.");
                 }
 
                 await _bankAccountService.DeleteBankAccountAsync(id);
-                _logger.LogInformation($"Bank Account with ID {id} deleted.");
+                _logger.LogInformation($"Bank account with ID {id} deleted.");
                 return NoContent();
             }
             catch (Exception ex)

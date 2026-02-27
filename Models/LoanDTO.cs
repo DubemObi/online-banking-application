@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using Banking.Models;
 
-namespace Banking.Models
-{
-    public class Loan
+public class LoanDTO
     {
         public int Id { get; set; }
 
@@ -30,34 +29,4 @@ namespace Banking.Models
         public int BankAccountId { get; set; }
         public BankAccount BankAccount { get; set; }
 
-        public void CalculateMonthlyInstallment()
-        {
-            var monthlyRate = InterestRate / 100m / 12m;
-
-            if (monthlyRate == 0)
-            {
-                MonthlyInstallment = PrincipalAmount / DurationInMonths;
-                return;
-            }
-
-            var power = (decimal)Math.Pow((double)(1 + monthlyRate), DurationInMonths);
-
-            MonthlyInstallment =
-                PrincipalAmount *
-                monthlyRate *
-                power /
-                (power - 1);
-        }
     }
-
-
-    public enum LoanStatus
-    {
-        Pending,
-        Approved,
-        Rejected,
-        Active,
-        Completed,
-        Defaulted
-    }
-}

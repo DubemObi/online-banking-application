@@ -7,11 +7,10 @@ namespace Banking.Models
 {
     public class Transaction
     {
-        [Required]   
+        [Required]
         public int TransactionId { get; set; }
         [Required]
         public decimal Amount { get; set; }
-
         public TransactionStatus Status { get; set; }
         public TransactionType TransactionType { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;

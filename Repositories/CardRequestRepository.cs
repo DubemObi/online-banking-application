@@ -22,6 +22,11 @@ namespace Banking.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
+
         public async Task UpdateAsync(Card card)
         {
             _context.Entry(card).State = EntityState.Modified;

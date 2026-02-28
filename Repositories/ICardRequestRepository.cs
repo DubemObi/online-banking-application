@@ -4,6 +4,7 @@ public interface ICardRequestRepository
 {
     Task<IEnumerable<CardRequest>> GetAllAsync();
     Task<CardRequest> GetByIdAsync(int id);
+    Task SaveChangesAsync();
     Task AddAsync(CardRequest cardRequest);
     Task UpdateAsync(CardRequest cardRequest);
     Task DeleteAsync(int id);

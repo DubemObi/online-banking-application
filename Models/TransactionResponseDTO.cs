@@ -3,11 +3,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Banking.Models;
 
-    public class TransactionDTO
+    public class TransactionResponseDTO
     {
-        [Required]   
         public int TransactionId { get; set; }
-        [Required]
+        
         public decimal Amount { get; set; }
 
         public TransactionStatus Status { get; set; }
@@ -23,7 +22,6 @@ using Banking.Models;
         public int AccountId { get; set; }
         public BankAccount BankAccount { get; set; }
         public int? RecipientAccountId { get; set; }
-        public string? RecipientAccountNumber { get; set; }
         public BankAccount? RecipientAccount { get; set; }
 
     }

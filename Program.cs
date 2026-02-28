@@ -16,11 +16,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
-// builder.Services.AddDbContext<SchoolContext>(options =>
-// options.UseSqlite(builder.Configuration.GetConnectionString("Connection")));
-// builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-//     .AddEntityFrameworkStores<SchoolContext>().AddDefaultTokenProviders();
-
 builder.Services.AddDbContext<BankContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Connection")));
     // builder.Services.AddDbContext<BankContext>(options =>
@@ -41,7 +36,13 @@ builder.Services.AddScoped<ILoanRequestRepository, LoanRequestRepository>();
 builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<ILoanRepository, LoanRepository>();
 
-// builder.Services.AddScoped<ICardRequestService, CardRequestService>();
+builder.Services.AddScoped<ICardService, CardService>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
+
+builder.Services.AddScoped<ICardRequestService, CardRequestService>();
+builder.Services.AddScoped<ICardRequestRepository, CardRequestRepository>();
+
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 builder.Services.AddScoped<RolesController>();
 

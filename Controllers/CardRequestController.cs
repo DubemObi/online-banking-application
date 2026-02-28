@@ -127,6 +127,32 @@ namespace banking.Controllers
             }
         }
 
+        [HttpPost("approve")]
+        public async Task<IActionResult> ApproveCard(CardApprovalDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                {
+                    _logger.LogWarning("Received empty card approval object.");
+                    return BadRequest("Card approval data cannot be null.");
+                }
+                var card = await _cardRequestService.ApproveCardRequestAsync(dto);
+                if (card == null)
+                {
+                    _logger.LogInformation($"Card request with ID {dto.CardRequestId} rejected.");
+                    return Ok("Card rejected successfully");
+                }
+                _logger.LogInformation($"Card request with ID {dto.CardRequestId} approved.");
+                return Ok(card);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while approving the card request.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
+        }
+
         // DELETE: api/CardRequests/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCardRequest(int id)

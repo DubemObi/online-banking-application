@@ -19,14 +19,28 @@ namespace Banking.Models
         public DbSet<LoanRequest> LoanRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<BankAccount>()
-            .Property(b => b.AccountBalance)
-            .HasColumnType("decimal(18,2)");
+        {
+            modelBuilder.Entity<BankAccount>()
+                .Property(b => b.AccountBalance)
+                .HasColumnType("decimal(18,2)");
 
-        modelBuilder.Entity<Transaction>()
-            .Property(t => t.Amount)
-            .HasColumnType("decimal(18,2)");
-    }
+            modelBuilder.Entity<Transaction>()
+                .Property(t => t.Amount)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Transaction>()
+        .HasOne(t => t.BankAccount)
+        .WithMany(b => b.Transactions)
+        .HasForeignKey(t => t.AccountId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Transaction>()
+            .HasOne(t => t.RecipientAccount)
+            .WithMany()
+            .HasForeignKey(t => t.RecipientAccountId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

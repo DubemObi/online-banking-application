@@ -30,6 +30,8 @@ namespace Banking.Models
         [JsonIgnore]
         public List<Transaction> Transactions { get; set; }
 
+        // public ICollection<Transaction> IncomingTransactions { get; set; }
+
 
         public void Deposit(decimal amount)
         {

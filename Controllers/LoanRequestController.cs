@@ -35,7 +35,7 @@ namespace banking.Controllers
                     _logger.LogWarning("No loan requests found.");
                     return NotFound("No loan requests found.");
                 }
-                
+
                 return Ok(loanRequests);
             }
             catch (Exception ex)
@@ -140,6 +140,32 @@ namespace banking.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while creating the loan request.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
+        }
+
+        [HttpPost("approve")]
+        public async Task<IActionResult> ApproveLoan(LoanApprovalDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                {
+                    _logger.LogWarning("Received empty loan approval object.");
+                    return BadRequest("Loan approval data cannot be null.");
+                }
+                var loan = await _loanRequestService.ApproveLoanRequestAsync(dto);
+                if (loan == null)
+                {
+                    _logger.LogInformation($"Loan request with ID {dto.LoanRequestId} rejected.");
+                    return Ok("Loan rejected successfully");
+                }
+                _logger.LogInformation($"Loan request with ID {dto.LoanRequestId} approved.");
+                return Ok(loan);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while approving the loan request.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
         }

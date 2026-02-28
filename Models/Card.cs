@@ -36,7 +36,7 @@ namespace Banking.Models
         [Required]
         public int UserId { get; set; }
         [JsonIgnore]
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
 
         [Required]
         public int BankAccountId { get; set; }

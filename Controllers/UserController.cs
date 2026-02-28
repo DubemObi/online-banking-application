@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Banking.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Drawing;
 
 namespace banking.Controllers
 {
@@ -13,95 +15,123 @@ namespace banking.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly BankContext _context;
+        private readonly IUserService _userService;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(BankContext context)
+        public UserController(IUserService userService, ILogger<UserController> logger)
         {
-            _context = context;
+            _userService = userService;
+            _logger = logger;
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: api/User
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            try
+            {
+                _logger.LogInformation("Fetching all users.");
+                var users = await _userService.GetAllAsync(1, 100);
+                if (users == null || !users.Any())
+                {
+                    _logger.LogWarning("No users found.");
+                    return NotFound("No users found.");
+                }
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching users.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // GET: api/User/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<UserDTO>> GetUser(string id)
         {
-            var user = await _context.Users.FindAsync(id);
-
-            if (user == null)
+            try
             {
-                return NotFound();
-            }
+                _logger.LogInformation($"Fetching user with ID {id}");
+                var user = await _userService.GetByIdAsync(id, User);
 
-            return user;
+                if (user == null)
+                {
+                    _logger.LogWarning($"User with ID {id} not found.");
+                    return NotFound($"User with ID {id} not found.");
+                }
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching the user.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // PUT: api/User/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        public async Task<IActionResult> PutUser(string id, UserDTO userDTO)
         {
-            if (id != user.UserId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(user).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
+                if (id != userDTO.Id)
+                {
+                    _logger.LogWarning("User ID mismatch.");
+                    return BadRequest("User ID mismatch.");
+                }
+
+                var isUpdated = await _userService.UpdateAsync(id, userDTO, User);
+                if (!isUpdated)
+                {
+                    _logger.LogWarning($"Failed to update user with ID {id}.");
+                    return NoContent();
+                }
+                return Ok("User updated successfully.");
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (await _userService.GetByIdAsync(id, User) == null)
                 {
-                    return NotFound();
+                    _logger.LogWarning($"User with ID {id} not found for update.");
+                    return NotFound($"User with ID {id} not found.");
                 }
                 else
                 {
+                    _logger.LogError("Error updating user.");
                     throw;
                 }
             }
-
-            return NoContent();
-        }
-
-        // POST: api/User
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
-        {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
-        }
-
-        // DELETE: api/User/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                _logger.LogError(ex, "An error occurred while updating the user.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.UserId == id);
-        }
+
+        // [Authorize(Roles = "Admin")]
+        // // DELETE: api/User/5
+        // [HttpDelete("{id}")]
+        // public async Task<IActionResult> DeleteUser(string id)
+        // {
+        //     var user = await _userService.GetByIdAsync(id, User);
+        //     if (user == null)
+        //     {
+        //             _logger.LogWarning($"User with ID {id} not found for deletion.");
+        //         return NotFound();
+        //     }
+
+        //     _userService.DeleteUser(user);
+        //     await _userService.SaveChangesAsync();
+
+        //     return NoContent();
+        // }
     }
+        
 }

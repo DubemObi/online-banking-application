@@ -90,6 +90,9 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
+
                 if (id != cardDTO.Id)
                 {
                     _logger.LogWarning("Card ID mismatch.");
@@ -142,6 +145,9 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
+                    
                 if (cardDTO == null)
                 {
                     _logger.LogWarning("Received empty card DTO.");

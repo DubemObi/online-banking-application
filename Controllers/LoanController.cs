@@ -90,6 +90,8 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
                 if (id != loanDto.Id)
                 {
                     _logger.LogWarning("Loan ID mismatch.");
@@ -135,6 +137,8 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
                 if (loanDto == null)
                 {
                     _logger.LogWarning("Received empty loan object.");

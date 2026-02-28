@@ -8,11 +8,13 @@ public class CardRequestService : ICardRequestService
 {
     private readonly ICardRequestRepository _cardRequestRepository;
     private readonly ICardService _cardService;
+    private readonly IBankAccountService _bankAccountService;
 
-    public CardRequestService(ICardRequestRepository cardRequestRepository, ICardService cardService)
+    public CardRequestService(ICardRequestRepository cardRequestRepository, ICardService cardService, IBankAccountService bankAccountService)
     {
         _cardRequestRepository = cardRequestRepository;
         _cardService = cardService;
+        _bankAccountService = bankAccountService;
     }
 
     public async Task<CardRequest> AddCardRequestAsync(CardRequest cardRequest)
@@ -26,6 +28,11 @@ public class CardRequestService : ICardRequestService
         var request = await _cardRequestRepository.GetByIdAsync(dto.CardRequestId);
         if (request == null) throw new Exception("Card request not found");
         if (request.Status != CardRequestStatus.Pending) throw new Exception("Already processed");
+
+        var bankAccount = await _bankAccountService.GetBankAccountByIdAsync(request.AccountId);
+
+                if (bankAccount == null || bankAccount.AccountStatus != AccountStatus.Active)
+                    throw new Exception("User must have an active bank account to request a card");
 
         request.Status = dto.IsApproved == CardRequestStatus.Approved ? CardRequestStatus.Approved : CardRequestStatus.Rejected;
         request.ReviewedAt = DateTime.UtcNow;

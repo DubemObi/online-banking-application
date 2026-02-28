@@ -15,11 +15,13 @@ namespace banking.Controllers
     public class LoanRequestController : ControllerBase
     {
         private readonly ILoanRequestService _loanRequestService;
+        private readonly IBankAccountService _bankAccountService;
         private readonly ILogger<LoanRequestController> _logger;
 
-        public LoanRequestController(ILoanRequestService loanRequestService, ILogger<LoanRequestController> logger)
+        public LoanRequestController(ILoanRequestService loanRequestService, IBankAccountService bankAccountService, ILogger<LoanRequestController> logger)
         {
             _loanRequestService = loanRequestService;
+            _bankAccountService = bankAccountService;
             _logger = logger;
         }
 
@@ -77,6 +79,8 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
                 if (id != loanRequestDto.Id)
                 {
                     _logger.LogWarning("Loan request ID mismatch.");
@@ -122,6 +126,13 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
+                var bankAccount = await _bankAccountService.GetBankAccountByIdAsync(loanRequestDto.BankAccountId);
+
+                if (bankAccount == null || bankAccount.AccountStatus != AccountStatus.Active)
+                    throw new Exception("User must have an active bank account to request a loan");
+                    
                 if (loanRequestDto == null)
                 {
                     _logger.LogWarning("Received empty loan request object.");
@@ -152,6 +163,8 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
                 if (dto == null)
                 {
                     _logger.LogWarning("Received empty loan approval object.");

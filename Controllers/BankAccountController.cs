@@ -76,6 +76,8 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
                 if (id != bankAccountDTO.AccountId)
                 {
                     _logger.LogWarning("Bank account ID mismatch.");
@@ -122,6 +124,8 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
                 if (bankAccountDTO == null)
                 {
                     _logger.LogWarning("Received empty bank account object.");

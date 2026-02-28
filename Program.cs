@@ -44,6 +44,8 @@ builder.Services.AddScoped<ICardRequestRepository, CardRequestRepository>();
 
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 
+builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddScoped<RolesController>();
 
 builder.Services.AddAuthentication(options =>

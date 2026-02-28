@@ -15,11 +15,13 @@ namespace banking.Controllers
     public class CardRequestController : ControllerBase
     {
         private readonly ICardRequestService _cardRequestService;
+        private readonly IBankAccountService _bankAccountService;
         private readonly ILogger<CardRequestController> _logger;
 
-        public CardRequestController(ICardRequestService cardRequestService, ILogger<CardRequestController> logger)
+        public CardRequestController(ICardRequestService cardRequestService, IBankAccountService bankAccountService, ILogger<CardRequestController> logger)
         {
             _cardRequestService = cardRequestService;
+            _bankAccountService = bankAccountService;
             _logger = logger;
         }
 
@@ -76,6 +78,8 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
                 if (id != cardRequestDTO.Id)
                 {
                     _logger.LogWarning("Card request ID mismatch.");
@@ -121,6 +125,12 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
+                var bankAccount = await _bankAccountService.GetBankAccountByIdAsync(cardRequestDTO.AccountId);
+
+                if (bankAccount == null || bankAccount.AccountStatus != AccountStatus.Active)
+                    throw new Exception("User must have an active bank account to request a card");
                 if (cardRequestDTO == null)
                 {
                     _logger.LogWarning("Received empty card request object.");
@@ -151,6 +161,8 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
                 if (dto == null)
                 {
                     _logger.LogWarning("Received empty card approval object.");

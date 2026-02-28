@@ -94,6 +94,8 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
                 if (transactionDTO == null)
                 {
                     _logger.LogWarning("Received empty transaction object.");
@@ -124,6 +126,8 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
                 if (transactionDTO == null)
                 {
                     _logger.LogWarning("Received empty transaction object.");
@@ -154,6 +158,8 @@ namespace banking.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)  
+                    return BadRequest(ModelState);
                 if (transactionDTO == null)
                 {
                     _logger.LogWarning("Received empty transaction object.");

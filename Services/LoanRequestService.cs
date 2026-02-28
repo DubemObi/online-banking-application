@@ -6,11 +6,13 @@ public class LoanRequestService : ILoanRequestService
 {
     private readonly ILoanRequestRepository _loanRequestRepository;
     private readonly ILoanService _loanService;
+    private readonly IBankAccountService _bankAccountService;
 
-    public LoanRequestService(ILoanRequestRepository loanRequestRepository, ILoanService loanService)
+    public LoanRequestService(ILoanRequestRepository loanRequestRepository, ILoanService loanService, IBankAccountService bankAccountService)
     {
         _loanRequestRepository = loanRequestRepository;
         _loanService = loanService;
+        _bankAccountService = bankAccountService;
     }
 
     public async Task<LoanRequest> AddLoanRequestAsync(LoanRequest loanRequest)
@@ -24,6 +26,11 @@ public class LoanRequestService : ILoanRequestService
         var request = await _loanRequestRepository.GetByIdAsync(dto.LoanRequestId);
         if (request == null) throw new Exception("Loan request not found");
         if (request.Status != LoanStatus.Pending) throw new Exception("Already processed");
+
+        var bankAccount = await _bankAccountService.GetBankAccountByIdAsync(request.BankAccountId);
+
+        if (bankAccount == null || bankAccount.AccountStatus != AccountStatus.Active)
+                    throw new Exception("User must have an active bank account to request a loan");
 
         request.Status = dto.IsApproved == LoanStatus.Approved ? LoanStatus.Approved : LoanStatus.Rejected;
         request.ReviewedAt = DateTime.UtcNow;

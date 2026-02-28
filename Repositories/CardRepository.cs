@@ -3,37 +3,37 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Banking.Repositories
 {
-    public class CardRequestRepository : ICardRequestRepository
+    public class CardRepository : ICardRepository
     {
         private readonly BankContext _context;
 
-        public CardRequestRepository(BankContext context)
+        public CardRepository(BankContext context)
         {
             _context = context;
         }
 
-        public async Task<IEnumerable<CardRequest>> GetAllAsync() => await _context.CardRequests.ToListAsync();
+        public async Task<IEnumerable<Card>> GetAllAsync() => await _context.Cards.ToListAsync();
 
-        public async Task<CardRequest> GetByIdAsync(int id) => await _context.CardRequests.FindAsync(id);
+        public async Task<Card> GetByIdAsync(int id) => await _context.Cards.FindAsync(id);
 
-        public async Task AddAsync(CardRequest cardRequest)
+        public async Task AddAsync(Card card)
         {
-            _context.CardRequests.Add(cardRequest);
+            _context.Cards.Add(card);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(CardRequest cardRequest)
+        public async Task UpdateAsync(Card card)
         {
-            _context.Entry(cardRequest).State = EntityState.Modified;
+            _context.Entry(card).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var cardRequest = await _context.CardRequests.FindAsync(id);
-            if (cardRequest != null)
+            var card = await _context.Cards.FindAsync(id);
+            if (card != null)
             {
-                _context.CardRequests.Remove(cardRequest);
+                _context.Cards.Remove(card);
                 await _context.SaveChangesAsync();
             }
         }

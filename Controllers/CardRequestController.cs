@@ -72,15 +72,24 @@ namespace banking.Controllers
 
         // PUT: api/CardRequests/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCardRequest(int id, CardRequest cardRequest)
+        public async Task<IActionResult> PutCardRequest(int id, CardRequestDTO cardRequestDTO)
         {
             try
             {
-                if (id != cardRequest.Id)
+                if (id != cardRequestDTO.Id)
                 {
                     _logger.LogWarning("Card request ID mismatch.");
                     return BadRequest("Card request ID mismatch.");
                 }
+
+                var cardRequest = new CardRequest
+                {
+                    Id = cardRequestDTO.Id,
+                    CardType = cardRequestDTO.CardType,
+                    CardBrand = cardRequestDTO.CardBrand,
+                    AccountId = cardRequestDTO.AccountId,
+                    UserId = cardRequestDTO.UserId
+                };
 
                 await _cardRequestService.UpdateCardRequestAsync(id, cardRequest);
                 _logger.LogInformation($"Card request with ID {id} updated.");
@@ -108,15 +117,23 @@ namespace banking.Controllers
 
         // POST: api/CardRequests
         [HttpPost]
-        public async Task<ActionResult<CardRequest>> PostCardRequest(CardRequest cardRequest)
+        public async Task<ActionResult<CardRequest>> PostCardRequest(CardRequestDTO cardRequestDTO)
         {
             try
             {
-                if (cardRequest == null)
+                if (cardRequestDTO == null)
                 {
                     _logger.LogWarning("Received empty card request object.");
                     return BadRequest("Card request data cannot be null.");
                 }
+
+                var cardRequest = new CardRequest
+                {
+                    CardType = cardRequestDTO.CardType,
+                    CardBrand = cardRequestDTO.CardBrand,
+                    AccountId = cardRequestDTO.AccountId,
+                    UserId = cardRequestDTO.UserId
+                };
 
                 await _cardRequestService.AddCardRequestAsync(cardRequest);
                 _logger.LogInformation($"Card request with ID {cardRequest.Id} created.");

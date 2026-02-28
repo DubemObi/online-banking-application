@@ -3,31 +3,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Banking.Repositories
 {
-    public class CardRepository : ICardRepository
+    public class CardRequestRepository : ICardRequestRepository
     {
         private readonly BankContext _context;
 
-        public CardRepository(BankContext context)
+        public CardRequestRepository(BankContext context)
         {
             _context = context;
         }
 
-        public async Task<IEnumerable<Card>> GetAllAsync() => await _context.Cards.ToListAsync();
+        public async Task<IEnumerable<CardRequest>> GetAllAsync() => await _context.CardRequests.ToListAsync();
 
-        public async Task<Card> GetByIdAsync(int id) => await _context.Cards.FindAsync(id);
+        public async Task<CardRequest> GetByIdAsync(int id) => await _context.CardRequests.FindAsync(id);
 
-        public async Task AddAsync(Card card)
+        public async Task AddAsync(CardRequest card)
         {
-            _context.Cards.Add(card);
+            _context.CardRequests.Add(card);
             await _context.SaveChangesAsync();
         }
 
         public async Task SaveChangesAsync()
-    {
-        await _context.SaveChangesAsync();
-    }
+        {
+            await _context.SaveChangesAsync();
+        }
 
-        public async Task UpdateAsync(Card card)
+        public async Task UpdateAsync(CardRequest card)
         {
             _context.Entry(card).State = EntityState.Modified;
             await _context.SaveChangesAsync();

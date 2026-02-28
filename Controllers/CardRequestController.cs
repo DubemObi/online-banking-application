@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Banking.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace banking.Controllers
 {
@@ -22,6 +23,7 @@ namespace banking.Controllers
             _logger = logger;
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: api/CardRequests
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CardRequest>>> GetCardRequests()
@@ -126,7 +128,7 @@ namespace banking.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("approve")]
         public async Task<IActionResult> ApproveCard(CardApprovalDTO dto)
         {

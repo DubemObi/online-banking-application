@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Banking.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace banking.Controllers
 {
@@ -23,6 +24,7 @@ namespace banking.Controllers
         }
 
         // GET: api/Loans
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Loan>>> GetLoans()
         {
@@ -68,7 +70,6 @@ namespace banking.Controllers
                 }
                 var loanResponse = new LoanResponseDTO
                 {
-                    Id = loan.Id,
                     PrincipalAmount = loan.PrincipalAmount,
                     DurationInMonths = loan.DurationInMonths,
                     BankAccountId = loan.BankAccountId,
@@ -98,7 +99,6 @@ namespace banking.Controllers
                 var loan = new Loan
                 {
                     Id = loanDto.Id,
-                    PrincipalAmount = loanDto.PrincipalAmount,
                     DurationInMonths = loanDto.DurationInMonths,
                     BankAccountId = loanDto.BankAccountId,
                     UserId = loanDto.UserId
@@ -129,6 +129,7 @@ namespace banking.Controllers
         }
 
         // POST: api/Loans
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<LoanDTO>> PostLoan(LoanDTO loanDto)
         {
@@ -159,6 +160,7 @@ namespace banking.Controllers
         }
 
         // DELETE: api/Loans/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLoan(int id)
         {

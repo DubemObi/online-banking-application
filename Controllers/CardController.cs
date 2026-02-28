@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Banking.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace banking.Controllers
 {
@@ -20,6 +21,7 @@ namespace banking.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: api/Card
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Card>>> GetCards()
@@ -40,7 +42,7 @@ namespace banking.Controllers
 
             return card;
         }
-
+        [Authorize(Roles = "Admin")]
         // PUT: api/Card/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -72,6 +74,7 @@ namespace banking.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         // POST: api/Card
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

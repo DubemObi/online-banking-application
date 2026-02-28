@@ -21,12 +21,12 @@ namespace Banking.Models
         public byte[] RowVersion { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public AccountType AccountType { get; set; }
-        public AccountStatus AccountStatus { get; set; }
+        public AccountType AccountType { get; set; } = AccountType.Savings;
+        public AccountStatus AccountStatus { get; set; } = AccountStatus.Active;
 
         public int UserId { get; set; }
         [JsonIgnore]
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
         [JsonIgnore]
         public List<Transaction> Transactions { get; set; }
 

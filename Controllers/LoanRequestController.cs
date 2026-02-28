@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Banking.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace banking.Controllers
 {
@@ -22,6 +23,7 @@ namespace banking.Controllers
             _logger = logger;
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: api/LoanRequests
         [HttpGet]
         public async Task<ActionResult<IEnumerable<LoanRequest>>> GetLoanRequests()
@@ -144,6 +146,7 @@ namespace banking.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("approve")]
         public async Task<IActionResult> ApproveLoan(LoanApprovalDTO dto)
         {

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Banking.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace banking.Controllers
 {
@@ -23,6 +24,7 @@ namespace banking.Controllers
         }
 
         // GET: api/BankAccounts
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BankAccount>>> GetBankAccounts()
         {
@@ -70,15 +72,25 @@ namespace banking.Controllers
 
         // PUT: api/BankAccounts/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBankAccount(int id, BankAccount bankAccount)
+        public async Task<IActionResult> PutBankAccount(int id, BankAccountDTO bankAccountDTO)
         {
             try
             {
-                if (id != bankAccount.AccountId)
+                if (id != bankAccountDTO.AccountId)
                 {
                     _logger.LogWarning("Bank account ID mismatch.");
                     return BadRequest("Bank account ID mismatch.");
                 }
+
+                var bankAccount = new BankAccount
+                {
+                    AccountId = bankAccountDTO.AccountId,
+                    AccountNumber = bankAccountDTO.AccountNumber,
+                    AccountName = bankAccountDTO.AccountName,
+                    AccountStatus = bankAccountDTO.AccountStatus,
+                    AccountType = bankAccountDTO.AccountType,
+                    UserId = bankAccountDTO.UserId
+                };
 
                 await _bankAccountService.UpdateBankAccountAsync(id, bankAccount);
                 _logger.LogInformation($"Bank account with ID {id} updated.");
@@ -106,19 +118,27 @@ namespace banking.Controllers
 
         // POST: api/BankAccounts
         [HttpPost]
-        public async Task<ActionResult<BankAccount>> PostBankAccount(BankAccount bankAccount)
+        public async Task<ActionResult<BankAccount>> PostBankAccount(BankAccountDTO bankAccountDTO)
         {
             try
             {
-                if (bankAccount == null)
+                if (bankAccountDTO == null)
                 {
                     _logger.LogWarning("Received empty bank account object.");
                     return BadRequest("Bank account data cannot be null.");
                 }
 
+                var bankAccount = new BankAccount
+                {
+                    AccountNumber = bankAccountDTO.AccountNumber,
+                    AccountName = bankAccountDTO.AccountName,
+                    AccountStatus = bankAccountDTO.AccountStatus,
+                    AccountType = bankAccountDTO.AccountType,
+                    UserId = bankAccountDTO.UserId
+                };
                 await _bankAccountService.AddBankAccountAsync(bankAccount);
                 _logger.LogInformation($"Bank account with ID {bankAccount.AccountId} created.");
-                return CreatedAtAction("GetBankAccount", new { id = bankAccount.AccountId }, bankAccount);
+                return CreatedAtAction("GetBankAccount", new { id = bankAccount.AccountId }, bankAccountDTO);
             }
             catch (Exception ex)
             {
@@ -128,6 +148,7 @@ namespace banking.Controllers
         }
 
         // DELETE: api/BankAccounts/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBankAccount(int id)
         {

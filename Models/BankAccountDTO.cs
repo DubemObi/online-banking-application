@@ -15,7 +15,6 @@ namespace Banking.Models
         [StringLength(100)]
         public string AccountName { get; set; } = null!;
 
-        public decimal AccountBalance { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

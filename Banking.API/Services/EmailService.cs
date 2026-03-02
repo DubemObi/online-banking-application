@@ -10,7 +10,7 @@ public class EmailService
     {
         _emailSettings = emailSettings.Value;
     }
-    public void SendEmail(string toEmail, string subject, string body)
+    public virtual void SendEmail(string toEmail, string subject, string body)
     {
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress("Support Student App", _emailSettings.SmtpUsername));
@@ -21,7 +21,7 @@ public class EmailService
             Text = body
         };
         message.Body = textPart;
-        using (var client = new SmtpClient())
+        using (var client = CreateSmtpClient())
         {
             client.Connect(_emailSettings.SmtpServer, _emailSettings.SmtpPort,
            SecureSocketOptions.StartTls);
@@ -29,5 +29,11 @@ public class EmailService
             client.Send(message);
             client.Disconnect(true);
         }
+    }
+
+    // for unit testing we allow overriding the SMTP client
+    protected virtual MailKit.Net.Smtp.ISmtpClient CreateSmtpClient()
+    {
+        return new SmtpClient();
     }
 }

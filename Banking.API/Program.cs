@@ -5,8 +5,12 @@ using Banking.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DotNetEnv;
 using Banking.Repositories;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.RateLimiting;
+
+DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +20,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
+if (string.IsNullOrEmpty(builder.Configuration.GetConnectionString("Connection")))
+{
+    throw new Exception("Database connection string is missing!");
+}
+
 builder.Services.AddDbContext<BankContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Connection")));
-    // builder.Services.AddDbContext<BankContext>(options =>
-    // options.UseSqlServer(builder.Configuration.GetConnectionString("BankingContext") ?? throw new InvalidOperationException("Connection string 'BankingContext' not found.")));
-
+   
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 .AddEntityFrameworkStores<BankContext>().AddDefaultTokenProviders();
 
@@ -48,6 +55,12 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<RolesController>();
 
+
+if (string.IsNullOrEmpty(builder.Configuration["Jwt:Key"]))
+{
+    throw new Exception("JWT key is missing!");
+}
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -67,7 +80,20 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("FixedPolicy", opt =>
+    {
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.PermitLimit = 6;   // 6 requests per minute
+        opt.QueueLimit = 0;
+    });
+});
+
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
@@ -80,6 +106,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseRateLimiter();
+
 
 var summaries = new[]
 {
@@ -100,9 +129,6 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();
-
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.Run();
 

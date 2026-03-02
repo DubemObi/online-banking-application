@@ -12,7 +12,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Banking.Controllers
+namespace banking.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

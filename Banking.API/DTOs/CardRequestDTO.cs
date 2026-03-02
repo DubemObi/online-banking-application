@@ -14,7 +14,7 @@ namespace Banking.Models
         public CardType CardType { get; set; }
         [Required]
         public CardBrand CardBrand { get; set; }
-       
+
     }
 }
 

@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore Banking.API/Banking.API.csproj
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Run unit tests
+        run: dotnet test Banking.Tests/Banking.Tests.csproj --no-build --configuration Release
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --file Dockerfile \
+            --tag banking-api:latest \
+            --build-arg ConnectionStrings__Connection="${{ secrets.CONNECTION_STRING }}" \
+            --build-arg Jwt__Key="${{ secrets.JWT_KEY }}" \
+            --build-arg Jwt__Issuer="${{ secrets.JWT_ISSUER }}" \
+            .
+
+      # optionally push to GitHub Container Registry if GITHUB_TOKEN secret is set
+      # - name: Log in to GitHub Container Registry
+      #   if: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # - name: Push image to GHCR
+      #   if: ${{ secrets.GITHUB_TOKEN}}
+      #   run: |
+      #     docker tag banking-api:latest ghcr.io/${{ github.repository_owner }}/banking-api:latest
+      #     docker push ghcr.io/${{ github.repository_owner }}/banking-api:latest

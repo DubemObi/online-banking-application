@@ -16,8 +16,6 @@ namespace Banking.Models
         public string AccountName { get; set; } = null!;
 
 
-        public DateTime CreatedAt { get; set; }
-
         public AccountType AccountType { get; set; }
 
         public AccountStatus AccountStatus { get; set; }

@@ -1,0 +1,15 @@
+bin/
+obj/
+*.md
+*.user
+*.suo
+**/.git
+**/.gitignore
+**/.env
+**/bin
+**/obj
+**/node_modules
+**/docker-compose*.yml
+
+# don't include local configurations
+appsettings*.json

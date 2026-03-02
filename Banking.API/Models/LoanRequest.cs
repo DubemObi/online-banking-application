@@ -23,6 +23,6 @@ namespace Banking.Models
         [Required]
         public int BankAccountId { get; set; }
     }
-     
+
 }
 

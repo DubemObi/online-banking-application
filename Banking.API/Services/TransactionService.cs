@@ -1,6 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Banking.Models;
-using Banking.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 public class TransactionService : ITransactionService
@@ -22,20 +23,17 @@ public class TransactionService : ITransactionService
 
         account.Deposit(amount);
 
-        var transaction = new Transaction
+        _context.Transactions.Add(new Transaction
         {
             AccountId = account.AccountId,
             Amount = amount,
             TransactionType = TransactionType.Deposit,
             Status = TransactionStatus.Completed,
-            Description = "Deposit transaction",
-            BankAccount = account
-        };
+            Description = "Deposit transaction"
+        });
 
-        _context.Transactions.Add(transaction);
         await _context.SaveChangesAsync();
         await dbTransaction.CommitAsync();
-
     }
 
     public async Task WithdrawAsync(int accountId, decimal amount)
@@ -46,6 +44,9 @@ public class TransactionService : ITransactionService
         if (account == null)
             throw new Exception("Account not found");
 
+        if (account.AccountBalance < amount)
+            throw new Exception("Insufficient funds");
+
         account.Withdraw(amount);
 
         _context.Transactions.Add(new Transaction
@@ -54,8 +55,7 @@ public class TransactionService : ITransactionService
             Amount = amount,
             TransactionType = TransactionType.Withdrawal,
             Status = TransactionStatus.Completed,
-            Description = "Withdrawal transaction",
-            BankAccount = account
+            Description = "Withdrawal transaction"
         });
 
         await _context.SaveChangesAsync();
@@ -66,11 +66,8 @@ public class TransactionService : ITransactionService
     {
         using var dbTransaction = await _context.Database.BeginTransactionAsync();
 
-        var fromAccount = await _context.BankAccounts
-            .FirstOrDefaultAsync(a => a.AccountId == fromAccountId);
-
-        var toAccount = await _context.BankAccounts
-            .FirstOrDefaultAsync(a => a.AccountNumber == toAccountNumber);
+        var fromAccount = await _context.BankAccounts.FindAsync(fromAccountId);
+        var toAccount = await _context.BankAccounts.FirstOrDefaultAsync(a => a.AccountNumber == toAccountNumber);
 
         if (fromAccount == null || toAccount == null)
             throw new Exception("Account not found");
@@ -78,10 +75,7 @@ public class TransactionService : ITransactionService
         if (fromAccount.AccountBalance < amount)
             throw new Exception("Insufficient funds");
 
-        // Debit
         fromAccount.Withdraw(amount);
-
-        // Credit
         toAccount.Deposit(amount);
 
         var reference = Guid.NewGuid().ToString();
@@ -94,9 +88,7 @@ public class TransactionService : ITransactionService
                 TransactionType = TransactionType.TransferDebit,
                 RecipientAccountId = toAccount.AccountId,
                 Description = $"Transfer to account {toAccount.AccountNumber}",
-                Reference = reference,
-                BankAccount = fromAccount,
-                RecipientAccount = toAccount
+                Reference = reference
             },
             new Transaction
             {
@@ -106,13 +98,13 @@ public class TransactionService : ITransactionService
                 RecipientAccountId = fromAccount.AccountId,
                 Description = $"Transfer from account {fromAccount.AccountNumber}",
                 Reference = reference
-
             }
         );
 
         await _context.SaveChangesAsync();
         await dbTransaction.CommitAsync();
     }
+
     public async Task<Transaction> GetTransactionByIdAsync(int transactionId)
     {
         return await _context.Transactions.FindAsync(transactionId);

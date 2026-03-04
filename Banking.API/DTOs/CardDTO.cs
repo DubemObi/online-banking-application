@@ -30,7 +30,7 @@ public class CardDTO
 
 
     [Required]
-    public int UserId { get; set; }
+    public string UserId { get; set; } = null!;
 
 
     [Required]

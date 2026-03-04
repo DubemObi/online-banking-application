@@ -7,7 +7,7 @@ namespace Banking.Models
         public int Id { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; } = null!;
         [Required]
         public int AccountId { get; set; }
         [Required]

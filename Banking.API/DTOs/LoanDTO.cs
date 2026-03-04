@@ -24,8 +24,8 @@ public class LoanDTO
     public DateTime? ApprovedAt { get; set; }
     public DateTime? DisbursedAt { get; set; }
 
-    public int UserId { get; set; }
-    public ApplicationUser User { get; set; }
+    public string UserId { get; set; } = null!;
+    public ApplicationUser User { get; set; } = null!;
     public int BankAccountId { get; set; }
     public BankAccount BankAccount { get; set; }
 

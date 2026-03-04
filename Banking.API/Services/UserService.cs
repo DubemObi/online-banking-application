@@ -24,15 +24,30 @@ public class UserService : IUserService
             });
     }
 
-    public async Task<UserDTO> GetByIdAsync(string id, ClaimsPrincipal currentUser)
+    // public async Task<UserDTO> GetByIdAsync(string id)
+    // {
+    //     var currentUserId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
+    //     Console.WriteLine($"CurrentUser: {currentUserId}");
+
+    //     if (currentUserId != id)
+    //         throw new UnauthorizedAccessException();
+    //     var user = await _userManager.FindByIdAsync(id);
+
+    //     if (user == null)
+    //         return null;
+
+    //     return new UserDTO
+    //     {
+    //         Id = user.Id,
+    //         Email = user.Email,
+    //         FirstName = user.FirstName,
+    //         LastName = user.LastName
+    //     };
+    // }
+
+public async Task<UserDTO> GetByIdAsync(string id)
     {
-        var currentUserId = currentUser.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (currentUserId != id && !currentUser.IsInRole("Admin"))
-            throw new UnauthorizedAccessException();
-
         var user = await _userManager.FindByIdAsync(id);
-
         if (user == null)
             return null;
 
@@ -41,9 +56,13 @@ public class UserService : IUserService
             Id = user.Id,
             Email = user.Email,
             FirstName = user.FirstName,
-            LastName = user.LastName
+            LastName = user.LastName,
+            PasswordHash = user.PasswordHash,
+            PhoneNumber = user.PhoneNumber,
+            Address = user.Address
         };
     }
+
 
     public async Task<bool> UpdateAsync(string id, UserDTO model, ClaimsPrincipal currentUser)
     {

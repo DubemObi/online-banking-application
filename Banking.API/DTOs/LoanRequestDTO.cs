@@ -15,7 +15,7 @@ namespace Banking.Models
         public int DurationInMonths { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; } = null!;
         [Required]
         public int BankAccountId { get; set; }
     }

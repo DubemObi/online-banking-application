@@ -24,7 +24,7 @@ public class CardResponseDTO
     public DateTime CreatedAt { get; set; }
 
 
-    public int UserId { get; set; }
+    public string UserId { get; set; } = null!;
     public int BankAccountId { get; set; }
 
 

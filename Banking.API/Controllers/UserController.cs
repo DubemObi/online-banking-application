@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Banking.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Drawing;
+using System.Security.Claims;
 
 namespace banking.Controllers
 {
@@ -54,7 +55,7 @@ namespace banking.Controllers
             try
             {
                 _logger.LogInformation($"Fetching user with ID {id}");
-                var user = await _userService.GetByIdAsync(id, User);
+                var user = await _userService.GetByIdAsync(id);
 
                 if (user == null)
                 {
@@ -96,7 +97,7 @@ namespace banking.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (await _userService.GetByIdAsync(id, User) == null)
+                if (await _userService.GetByIdAsync(id) == null)
                 {
                     _logger.LogWarning($"User with ID {id} not found for update.");
                     return NotFound($"User with ID {id} not found.");

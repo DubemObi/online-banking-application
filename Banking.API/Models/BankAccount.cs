@@ -17,18 +17,17 @@ namespace Banking.Models
         public string AccountName { get; set; }
         public decimal AccountBalance { get; set; }
 
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public AccountType AccountType { get; set; } = AccountType.Savings;
         public AccountStatus AccountStatus { get; set; } = AccountStatus.Active;
 
-        public int UserId { get; set; }
+        [Required]
+        public string UserId { get; set; } = null!;
         [JsonIgnore]
-        public ApplicationUser User { get; set; }
+        public ApplicationUser User { get; set; } = null!;
         [JsonIgnore]
-        public List<Transaction> Transactions { get; set; }
+        public List<Transaction> Transactions { get; set; } = new();
 
         // public ICollection<Transaction> IncomingTransactions { get; set; }
 

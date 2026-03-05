@@ -45,7 +45,7 @@ namespace Banking.Tests.Services
                 new Claim(ClaimTypes.NameIdentifier, "99")
             }));
 
-            var dto = await service.GetByIdAsync("99", principal);
+            var dto = await service.GetByIdAsync("99");
             Assert.Equal("99", dto.Id);
         }
 
@@ -56,7 +56,7 @@ namespace Banking.Tests.Services
             var service = new UserService(userMgrMock.Object);
             var principal = new ClaimsPrincipal(new ClaimsIdentity());
             await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-                await service.GetByIdAsync("abc", principal));
+                await service.GetByIdAsync("abc"));
         }
 
         [Fact]

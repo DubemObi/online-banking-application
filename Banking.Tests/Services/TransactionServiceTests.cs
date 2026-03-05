@@ -34,8 +34,7 @@ namespace Banking.Tests.Services
                 AccountBalance = 0m,
                 AccountName = "Test",
                 AccountNumber = "ACC1",
-                UserId = 1,
-                RowVersion = new byte[] { 0 }
+                UserId = "1",
             };
             ctx.BankAccounts.Add(account);
             try
@@ -98,7 +97,6 @@ namespace Banking.Tests.Services
                 AccountName = "Foo",
                 AccountBalance = 200m,
                 UserId = "1",
-                RowVersion = new byte[] { 0 }
             };
             var b = new BankAccount
             {
@@ -107,7 +105,6 @@ namespace Banking.Tests.Services
                 AccountName = "Bar",
                 AccountBalance = 50m,
                 UserId = "2",
-                RowVersion = new byte[] { 0 }
             };
             ctx.BankAccounts.AddRange(a, b);
             await ctx.SaveChangesAsync();

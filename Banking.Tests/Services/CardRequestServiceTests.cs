@@ -54,7 +54,7 @@ namespace Banking.Tests.Services
             repoMock.Setup(r => r.GetByIdAsync(3)).ReturnsAsync(existing);
             repoMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
             var bankMock = new Mock<IBankAccountService>();
-            bankMock.Setup(b => b.GetBankAccountByIdAsync(10)).ReturnsAsync(new BankAccount { AccountId = 10, AccountStatus = AccountStatus.Active, AccountName = "A", AccountNumber = "N", RowVersion = new byte[] { 0 } });
+            bankMock.Setup(b => b.GetBankAccountByIdAsync(10)).ReturnsAsync(new BankAccount { AccountId = 10, AccountStatus = AccountStatus.Active, AccountName = "A", AccountNumber = "N"});
 
             var service = new CardRequestService(repoMock.Object, Mock.Of<ICardService>(), bankMock.Object);
             var result = await service.ApproveCardRequestAsync(new CardApprovalDTO { CardRequestId = 3, IsApproved = CardRequestStatus.Rejected });
@@ -71,7 +71,7 @@ namespace Banking.Tests.Services
             repoMock.Setup(r => r.GetByIdAsync(4)).ReturnsAsync(existing);
             repoMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
             var bankMock = new Mock<IBankAccountService>();
-            bankMock.Setup(b => b.GetBankAccountByIdAsync(11)).ReturnsAsync(new BankAccount { AccountId = 11, AccountStatus = AccountStatus.Active, AccountName = "A", AccountNumber = "N", RowVersion = new byte[] { 0 } });
+            bankMock.Setup(b => b.GetBankAccountByIdAsync(11)).ReturnsAsync(new BankAccount { AccountId = 11, AccountStatus = AccountStatus.Active, AccountName = "A", AccountNumber = "N"});
             var cardMock = new Mock<ICardService>();
             cardMock.Setup(c => c.AddCardAsync(It.IsAny<Card>())).ReturnsAsync((Card c) => c);
 

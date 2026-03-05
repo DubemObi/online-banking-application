@@ -58,7 +58,7 @@ namespace Banking.Tests.Controllers
             var serviceMock = new Mock<IBankAccountService>();
             var controller = new BankAccountController(serviceMock.Object, new NullLogger<BankAccountController>());
 
-            var dto = new BankAccountDTO { AccountId = 2, AccountNumber = "X", AccountName = "Y", UserId = 1 };
+            var dto = new BankAccountDTO { AccountId = 2, AccountNumber = "X", AccountName = "Y", UserId = "1" };
             var result = await controller.PutBankAccount(3, dto);
 
             Assert.IsType<BadRequestObjectResult>(result);
@@ -72,7 +72,7 @@ namespace Banking.Tests.Controllers
 
             var controller = new BankAccountController(serviceMock.Object, new NullLogger<BankAccountController>());
 
-            var dto = new BankAccountDTO { AccountNumber = "98765", AccountName = "New", UserId = 1 };
+            var dto = new BankAccountDTO { AccountNumber = "98765", AccountName = "New", UserId = "1" };
             var result = await controller.PostBankAccount(dto);
 
             var created = Assert.IsType<CreatedAtActionResult>(result.Result);

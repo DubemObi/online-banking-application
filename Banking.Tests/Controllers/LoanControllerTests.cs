@@ -54,7 +54,7 @@ namespace Banking.Tests.Controllers
         {
             var serviceMock = new Mock<ILoanService>();
             var controller = new LoanController(serviceMock.Object, new NullLogger<LoanController>());
-            var dto = new LoanDTO { Id = 1, DurationInMonths = 5, BankAccountId = 1, UserId = 1 };
+            var dto = new LoanDTO { Id = 1, DurationInMonths = 5, BankAccountId = 1, UserId = "1" };
             var result = await controller.PutLoan(2, dto);
             Assert.IsType<BadRequestObjectResult>(result);
         }

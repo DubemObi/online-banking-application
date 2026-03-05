@@ -17,7 +17,7 @@ namespace Banking.Tests.Services
             repoMock.Setup(r => r.AddAsync(It.IsAny<BankAccount>())).Returns(Task.CompletedTask).Verifiable();
 
             var service = new BankAccountService(repoMock.Object);
-            var account = new BankAccount { AccountNumber = "12345", AccountName = "Test", UserId = 1 };
+            var account = new BankAccount { AccountNumber = "12345", AccountName = "Test", UserId = "1" };
 
             var result = await service.AddBankAccountAsync(account);
 

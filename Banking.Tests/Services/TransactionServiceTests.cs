@@ -52,7 +52,7 @@ namespace Banking.Tests.Services
             // make sure the account has its UserId before calling service
             var pre = await ctx.BankAccounts.FindAsync(1);
             Assert.NotNull(pre);
-            Assert.Equal(1, pre.UserId);
+            Assert.Equal("1", pre.UserId);
 
             var service = new TransactionService(ctx);
             try
@@ -97,7 +97,7 @@ namespace Banking.Tests.Services
                 AccountNumber = "A",
                 AccountName = "Foo",
                 AccountBalance = 200m,
-                UserId = 1,
+                UserId = "1",
                 RowVersion = new byte[] { 0 }
             };
             var b = new BankAccount
@@ -106,7 +106,7 @@ namespace Banking.Tests.Services
                 AccountNumber = "B",
                 AccountName = "Bar",
                 AccountBalance = 50m,
-                UserId = 2,
+                UserId = "2",
                 RowVersion = new byte[] { 0 }
             };
             ctx.BankAccounts.AddRange(a, b);

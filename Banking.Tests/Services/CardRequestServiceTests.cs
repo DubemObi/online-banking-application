@@ -49,7 +49,7 @@ namespace Banking.Tests.Services
         [Fact]
         public async Task ApproveCardRequestAsync_Rejects_ReturnsNull()
         {
-            var existing = new CardRequest { Id = 3, Status = CardRequestStatus.Pending, AccountId = 10, UserId = 7, CardBrand = CardBrand.Visa, CardType = CardType.Debit };
+            var existing = new CardRequest { Id = 3, Status = CardRequestStatus.Pending, AccountId = 10, UserId = "7", CardBrand = CardBrand.Visa, CardType = CardType.Debit };
             var repoMock = new Mock<ICardRequestRepository>();
             repoMock.Setup(r => r.GetByIdAsync(3)).ReturnsAsync(existing);
             repoMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
@@ -66,7 +66,7 @@ namespace Banking.Tests.Services
         [Fact]
         public async Task ApproveCardRequestAsync_Approves_CreatesCard()
         {
-            var existing = new CardRequest { Id = 4, Status = CardRequestStatus.Pending, AccountId = 11, UserId = 8, CardBrand = CardBrand.MasterCard, CardType = CardType.Credit };
+            var existing = new CardRequest { Id = 4, Status = CardRequestStatus.Pending, AccountId = 11, UserId = "8", CardBrand = CardBrand.MasterCard, CardType = CardType.Credit };
             var repoMock = new Mock<ICardRequestRepository>();
             repoMock.Setup(r => r.GetByIdAsync(4)).ReturnsAsync(existing);
             repoMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);

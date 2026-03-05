@@ -18,7 +18,7 @@ namespace Banking.Tests.Services
             var loanSvcMock = new Mock<ILoanService>();
             var acctSvcMock = new Mock<IBankAccountService>();
 
-            var request = new LoanRequest { Id = 1, Status = LoanStatus.Pending, BankAccountId = 2, UserId = 7, PrincipalAmount = 100m, DurationInMonths = 10 };
+            var request = new LoanRequest { Id = 1, Status = LoanStatus.Pending, BankAccountId = 2, UserId = "7", PrincipalAmount = 100m, DurationInMonths = 10 };
             repoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(request);
             acctSvcMock.Setup(a => a.GetBankAccountByIdAsync(2))
                 .ReturnsAsync(new BankAccount { AccountId = 2, AccountStatus = AccountStatus.Active });

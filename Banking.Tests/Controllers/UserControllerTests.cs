@@ -17,7 +17,7 @@ namespace Banking.Tests.Controllers
         {
             var dto = new UserDTO { Id = "u1" };
             var svc = new Mock<IUserService>();
-            svc.Setup(s => s.GetByIdAsync("u1", It.IsAny<ClaimsPrincipal>())).ReturnsAsync(dto);
+            svc.Setup(s => s.GetByIdAsync("u1")).ReturnsAsync(dto);
             var controller = new UserController(svc.Object, new NullLogger<UserController>());
 
             var res = await controller.GetUser("u1");
@@ -29,7 +29,7 @@ namespace Banking.Tests.Controllers
         public async Task GetUser_ReturnsNotFound_WhenMissing()
         {
             var svc = new Mock<IUserService>();
-            svc.Setup(s => s.GetByIdAsync("u2", It.IsAny<ClaimsPrincipal>())).ReturnsAsync((UserDTO?)null);
+            svc.Setup(s => s.GetByIdAsync("u2")).ReturnsAsync((UserDTO?)null);
             var controller = new UserController(svc.Object, new NullLogger<UserController>());
 
             var res = await controller.GetUser("u2");

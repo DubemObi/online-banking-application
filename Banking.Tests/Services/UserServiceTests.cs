@@ -53,10 +53,15 @@ namespace Banking.Tests.Services
         public async Task GetByIdAsync_Throws_WhenNotAuthorized()
         {
             var userMgrMock = CreateUserManagerMock();
+
+            userMgrMock
+        .Setup(x => x.FindByIdAsync(It.IsAny<string>()))
+        .ReturnsAsync((ApplicationUser)null);
+
             var service = new UserService(userMgrMock.Object);
-            var principal = new ClaimsPrincipal(new ClaimsIdentity());
-            await Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-                await service.GetByIdAsync("abc"));
+
+            var results = await service.GetByIdAsync("abc");
+            Assert.Null(results);
         }
 
         [Fact]

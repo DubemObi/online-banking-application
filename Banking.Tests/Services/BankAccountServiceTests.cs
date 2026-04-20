@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Banking.Models;
 using Moq;
 using Xunit;
+using Microsoft.EntityFrameworkCore;
 
 namespace Banking.Tests.Services
 {
@@ -10,13 +11,22 @@ namespace Banking.Tests.Services
     // so we verify behavior without hitting a database.
     public class BankAccountServiceTests
     {
+        private BankContext CreateInMemoryContext()
+        {
+            var options = new DbContextOptionsBuilder<BankContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
+            return new BankContext(options);
+        }
+
         [Fact]
         public async Task AddBankAccountAsync_CallsRepositoryAndReturnsAccount()
         {
             var repoMock = new Mock<IBankAccountRepository>();
             repoMock.Setup(r => r.AddAsync(It.IsAny<BankAccount>())).Returns(Task.CompletedTask).Verifiable();
 
-            var service = new BankAccountService(repoMock.Object);
+            var context = CreateInMemoryContext();
+            var service = new BankAccountService(repoMock.Object, context);
             var account = new BankAccount { AccountNumber = "12345", AccountName = "Test", UserId = "1" };
 
             var result = await service.AddBankAccountAsync(account);
@@ -32,7 +42,8 @@ namespace Banking.Tests.Services
             var repoMock = new Mock<IBankAccountRepository>();
             repoMock.Setup(r => r.GetByIdAsync(5)).ReturnsAsync(account);
 
-            var service = new BankAccountService(repoMock.Object);
+            var context = CreateInMemoryContext();
+            var service = new BankAccountService(repoMock.Object, context);
             var result = await service.GetBankAccountByIdAsync(5);
 
             Assert.Equal(account, result);
@@ -46,7 +57,8 @@ namespace Banking.Tests.Services
             repoMock.Setup(r => r.GetByIdAsync(7)).ReturnsAsync(account);
             repoMock.Setup(r => r.DeleteAsync(7)).Returns(Task.CompletedTask).Verifiable();
 
-            var service = new BankAccountService(repoMock.Object);
+            var context = CreateInMemoryContext();
+            var service = new BankAccountService(repoMock.Object, context);
             var result = await service.DeleteBankAccountAsync(7);
 
             Assert.True(result);
@@ -59,7 +71,8 @@ namespace Banking.Tests.Services
             var repoMock = new Mock<IBankAccountRepository>();
             repoMock.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((BankAccount?)null);
 
-            var service = new BankAccountService(repoMock.Object);
+            var context = CreateInMemoryContext();
+            var service = new BankAccountService(repoMock.Object, context);
             var result = await service.DeleteBankAccountAsync(99);
 
             Assert.False(result);

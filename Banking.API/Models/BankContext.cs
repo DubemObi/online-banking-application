@@ -19,6 +19,8 @@ namespace Banking.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<BankAccount>()
                 .Property(b => b.AccountBalance)
                 .HasColumnType("decimal(18,2)");
@@ -39,7 +41,32 @@ namespace Banking.Models
             .HasForeignKey(t => t.RecipientAccountId)
             .OnDelete(DeleteBehavior.Restrict);
 
-            base.OnModelCreating(modelBuilder);
+            // Configure Card relationships to avoid cascade delete cycles
+            modelBuilder.Entity<Card>()
+                .HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Card>()
+                .HasOne(c => c.BankAccount)
+                .WithMany()
+                .HasForeignKey(c => c.BankAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Also restrict BankAccount -> User to avoid any potential issues
+            modelBuilder.Entity<BankAccount>()
+                .HasOne(b => b.User)
+                .WithMany()
+                .HasForeignKey(b => b.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure Loan relationships
+            modelBuilder.Entity<Loan>()
+                .HasOne(l => l.User)
+                .WithMany()
+                .HasForeignKey(l => l.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

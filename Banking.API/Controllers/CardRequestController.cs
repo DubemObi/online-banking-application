@@ -97,7 +97,7 @@ namespace banking.Controllers
 
                 await _cardRequestService.UpdateCardRequestAsync(id, cardRequest);
                 _logger.LogInformation($"Card request with ID {id} updated.");
-                return NoContent();
+                return Ok(cardRequest);
             }
             catch (DbUpdateConcurrencyException)
             {

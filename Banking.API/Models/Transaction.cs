@@ -20,7 +20,7 @@ namespace Banking.Models
 
         [Required]
         public int AccountId { get; set; }
-        public BankAccount BankAccount { get; set; }
+        public BankAccount? BankAccount { get; set; }
         // [JsonIgnore]
         public int? RecipientAccountId { get; set; }
         public BankAccount? RecipientAccount { get; set; }

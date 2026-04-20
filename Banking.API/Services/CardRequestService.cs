@@ -34,14 +34,16 @@ public class CardRequestService : ICardRequestService
                 if (bankAccount == null || bankAccount.AccountStatus != AccountStatus.Active)
                     throw new Exception("User must have an active bank account to request a card");
 
-        request.Status = dto.IsApproved == CardRequestStatus.Approved ? CardRequestStatus.Approved : CardRequestStatus.Rejected;
-        request.ReviewedAt = DateTime.UtcNow;
-
         if (dto.IsApproved != CardRequestStatus.Approved)
         {
             await _cardRequestRepository.SaveChangesAsync();
             return null;
         }
+
+        request.Status = dto.IsApproved == CardRequestStatus.Approved ? CardRequestStatus.Approved : CardRequestStatus.Rejected;
+        request.ReviewedAt = DateTime.UtcNow;
+
+        
 
         // Create actual Card
         var cardNumber = GenerateCardNumber(request.CardBrand);

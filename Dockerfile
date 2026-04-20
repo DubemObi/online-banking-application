@@ -19,25 +19,25 @@ WORKDIR /app
 
 # Environment variables can be supplied at runtime or build time via --build-arg
 # Do NOT hardcode secrets here; pass them when running the container.
-ARG ConnectionStrings__Connection
+ARG ConnectionStrings__DefaultConnection
 ARG Jwt__Key
 ARG Jwt__Issuer
 ARG EmailSettings__SmtpServer
-ARG EmailSettings__Port
-ARG EmailSettings__Username
-ARG EmailSettings__Password
+ARG EmailSettings__SmtpPort
+ARG EmailSettings__SmtpUsername
+ARG EmailSettings__SmtpPassword
 ARG ASPNETCORE_ENVIRONMENT=Production
 
 # optional: set defaults or leave unset
 ENV ASPNETCORE_URLS=http://+:80 \
     ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT} \
-    ConnectionStrings__Connection=${ConnectionStrings__Connection} \
+    ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection} \
     Jwt__Key=${Jwt__Key} \
     Jwt__Issuer=${Jwt__Issuer} \
     EmailSettings__SmtpServer=${EmailSettings__SmtpServer} \
-    EmailSettings__Port=${EmailSettings__Port} \
-    EmailSettings__Username=${EmailSettings__Username} \
-    EmailSettings__Password=${EmailSettings__Password}
+    EmailSettings__SmtpPort=${EmailSettings__SmtpPort} \
+    EmailSettings__SmtpUsername=${EmailSettings__SmtpUsername} \
+    EmailSettings__SmtpPassword=${EmailSettings__SmtpPassword}
 
 # copy published output
 COPY --from=build /app/out .

@@ -18,24 +18,28 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
+      - name: Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }} restore-keys: |
+            ${{ runner.os }}-nuget-
+
       - name: Restore dependencies
         # run: dotnet restore Banking.API/Banking.API.csproj
-        run: dotnet restore
+        run: dotnet restore banking.sln
 
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
       - name: Run unit tests
-        run: dotnet test Banking.Tests/Banking.Tests.csproj --no-build --configuration Release
+        run: dotnet test --no-build --configuration Release
 
       - name: Build Docker image
         run: |
           docker build \
             --file Dockerfile \
-            --tag banking-api:latest \
-            --build-arg ConnectionStrings__Connection="${{ secrets.CONNECTION_STRING }}" \
-            --build-arg Jwt__Key="${{ secrets.JWT_KEY }}" \
-            --build-arg Jwt__Issuer="${{ secrets.JWT_ISSUER }}" \
+            --tag banking-api:${{ github.sha }} \
             .
 
       # optionally push to GitHub Container Registry if GITHUB_TOKEN secret is set

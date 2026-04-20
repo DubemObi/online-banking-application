@@ -10,8 +10,9 @@ public class ApplicationUser : IdentityUser
         public string Address { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public ICollection<BankAccount> BankAccounts { get; set; }
-        public ICollection<Card> Cards { get; set; }
-        public ICollection<Loan> Loans { get; set; }
+        // Removed navigation properties to avoid cascade delete issues
+        // public ICollection<BankAccount> BankAccounts { get; set; }
+        // public ICollection<Card> Cards { get; set; }
+        // public ICollection<Loan> Loans { get; set; }
 
 }

@@ -53,15 +53,17 @@ namespace Banking.Tests.Controllers
         }
 
         [Fact]
-        public async Task PutBankAccount_ReturnsBadRequest_OnIdMismatch()
+        public async Task PutBankAccount_ReturnsNotFound_WhenAccountMissing()
         {
             var serviceMock = new Mock<IBankAccountService>();
+            serviceMock.Setup(s => s.GetBankAccountByIdAsync(3)).ReturnsAsync((BankAccount?)null);
+
             var controller = new BankAccountController(serviceMock.Object, new NullLogger<BankAccountController>());
 
-            var dto = new BankAccountDTO { AccountId = 2, AccountNumber = "X", AccountName = "Y", UserId = "1" };
+            var dto = new BankAccountDTO { AccountName = "Y", UserId = "1" };
             var result = await controller.PutBankAccount(3, dto);
 
-            Assert.IsType<BadRequestObjectResult>(result);
+            Assert.IsType<NotFoundObjectResult>(result);
         }
 
         [Fact]
@@ -72,11 +74,11 @@ namespace Banking.Tests.Controllers
 
             var controller = new BankAccountController(serviceMock.Object, new NullLogger<BankAccountController>());
 
-            var dto = new BankAccountDTO { AccountNumber = "98765", AccountName = "New", UserId = "1" };
+            var dto = new BankAccountDTO { AccountName = "New", UserId = "1" };
             var result = await controller.PostBankAccount(dto);
 
             var created = Assert.IsType<CreatedAtActionResult>(result.Result);
-            Assert.Equal(dto, created.Value);
+            Assert.NotNull(created.Value);
         }
 
         [Fact]

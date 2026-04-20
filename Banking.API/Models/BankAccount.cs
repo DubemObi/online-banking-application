@@ -1,20 +1,22 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace Banking.Models
 {
+    [Index(nameof(AccountNumber), IsUnique = true)]
     public class BankAccount
     {
         [Key]
         public int AccountId { get; set; }
 
         [Required]
-        [StringLength(20, MinimumLength = 5)]
-        public string AccountNumber { get; set; }
+        [StringLength(12, MinimumLength = 10)]
+        public string AccountNumber { get; set; } = null!;
         [Required]
         [StringLength(100)]
-        public string AccountName { get; set; }
+        public string AccountName { get; set; } = null!;
         public decimal AccountBalance { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

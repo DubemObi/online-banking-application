@@ -13,7 +13,7 @@ Example build command:
 ```bash
 # supply secrets via build arguments or let them be set at container runtime
 docker build \
-  --build-arg ConnectionStrings__Connection="${CONN}" \
+  --build-arg ConnectionStrings__DefaultConnection="${CONN}" \
   --build-arg Jwt__Key="${JWTKEY}" \
   --build-arg Jwt__Issuer="${JWTISSUER}" \
   -t banking-api:latest .
@@ -21,20 +21,20 @@ docker build \
 
 Run container:
 ```bash
-docker run -e ConnectionStrings__Connection="${CONN}" \
+docker run -e ConnectionStrings__DefaultConnection="${CONN}" \
            -e Jwt__Key="${JWTKEY}" \
            -e Jwt__Issuer="${JWTISSUER}" \
            -e EmailSettings__SmtpServer="smtp.example.com" \
-           -e EmailSettings__Port=587 \
-           -e EmailSettings__Username="user" \
-           -e EmailSettings__Password="pass" \
+           -e EmailSettings__SmtpPort=587 \
+           -e EmailSettings__SmtpUsername="user" \
+           -e EmailSettings__SmtpPassword="pass" \
            -p 80:80 banking-api:latest
 ```
 
 #### Environment Variables
 Configuration relies on the default ASP.NET Core configuration providers, which automatically read environment variables. The colon (`:`) is replaced by double underscore (`__`) in variables:
 
-- `ConnectionStrings__Connection` – database connection string (SQLite filename/URL)
+- `ConnectionStrings__DefaultConnection` – database connection string (SQLite filename/URL)
 - `Jwt__Key` – secret key for token signing (minimum 128 bits)
 - `Jwt__Issuer` – issuer/audience value
 - `EmailSettings__*` – SMTP configuration

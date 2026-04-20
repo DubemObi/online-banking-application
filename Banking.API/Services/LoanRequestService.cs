@@ -30,7 +30,7 @@ public class LoanRequestService : ILoanRequestService
         var bankAccount = await _bankAccountService.GetBankAccountByIdAsync(request.BankAccountId);
 
         if (bankAccount == null || bankAccount.AccountStatus != AccountStatus.Active)
-                    throw new Exception("User must have an active bank account to request a loan");
+            throw new Exception("User must have an active bank account to request a loan");
 
         request.Status = dto.IsApproved == LoanStatus.Approved ? LoanStatus.Approved : LoanStatus.Rejected;
         request.ReviewedAt = DateTime.UtcNow;
@@ -46,6 +46,7 @@ public class LoanRequestService : ILoanRequestService
         var loan = new Loan
         {
             UserId = request.UserId,
+            BankAccountId = request.BankAccountId,
             PrincipalAmount = request.PrincipalAmount,
             DurationInMonths = request.DurationInMonths,
             Status = LoanStatus.Approved,
@@ -54,6 +55,10 @@ public class LoanRequestService : ILoanRequestService
 
         await _loanService.AddLoanAsync(loan);
         await _loanRequestRepository.SaveChangesAsync();
+        await _bankAccountService.GetBankAccountByIdAsync(request.BankAccountId);
+        bankAccount.Deposit(request.PrincipalAmount);
+        await _bankAccountService.UpdateBankAccountAsync(bankAccount.AccountId, bankAccount);
+        
         return loan;
     }
     public async Task<LoanRequest> GetLoanRequestByIdAsync(int loanRequestId)

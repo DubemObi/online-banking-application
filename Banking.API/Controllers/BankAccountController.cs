@@ -76,27 +76,25 @@ namespace banking.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)  
+                if (!ModelState.IsValid)
                     return BadRequest(ModelState);
-                if (id != bankAccountDTO.AccountId)
+
+                var bankAccount = await _bankAccountService.GetBankAccountByIdAsync(id);
+                if (bankAccount == null)
                 {
-                    _logger.LogWarning("Bank account ID mismatch.");
-                    return BadRequest("Bank account ID mismatch.");
+                    _logger.LogWarning($"Bank account with ID {id} not found for update.");
+                    return NotFound($"Bank account with ID {id} not found.");
                 }
 
-                var bankAccount = new BankAccount
-                {
-                    AccountId = bankAccountDTO.AccountId,
-                    AccountNumber = bankAccountDTO.AccountNumber,
-                    AccountName = bankAccountDTO.AccountName,
-                    AccountStatus = bankAccountDTO.AccountStatus,
-                    AccountType = bankAccountDTO.AccountType,
-                    UserId = bankAccountDTO.UserId
-                };
+                bankAccount.AccountName = bankAccountDTO.AccountName;
+                bankAccount.AccountStatus = bankAccountDTO.AccountStatus;
+                bankAccount.AccountType = bankAccountDTO.AccountType;
+                bankAccount.UserId = bankAccountDTO.UserId;
 
                 await _bankAccountService.UpdateBankAccountAsync(id, bankAccount);
                 _logger.LogInformation($"Bank account with ID {id} updated.");
-                return NoContent();
+                return Ok("Bank account updated successfully.");
+
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -124,7 +122,7 @@ namespace banking.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)  
+                if (!ModelState.IsValid)
                     return BadRequest(ModelState);
                 if (bankAccountDTO == null)
                 {
@@ -134,7 +132,6 @@ namespace banking.Controllers
 
                 var bankAccount = new BankAccount
                 {
-                    AccountNumber = bankAccountDTO.AccountNumber,
                     AccountName = bankAccountDTO.AccountName,
                     AccountStatus = bankAccountDTO.AccountStatus,
                     AccountType = bankAccountDTO.AccountType,
@@ -142,7 +139,7 @@ namespace banking.Controllers
                 };
                 await _bankAccountService.AddBankAccountAsync(bankAccount);
                 _logger.LogInformation($"Bank account with ID {bankAccount.AccountId} created.");
-                return CreatedAtAction("GetBankAccount", new { id = bankAccount.AccountId }, bankAccountDTO);
+                return CreatedAtAction("GetBankAccount", new { id = bankAccount.AccountId }, bankAccount);
             }
             catch (Exception ex)
             {

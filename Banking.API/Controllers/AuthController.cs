@@ -98,7 +98,7 @@ namespace banking.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 var roles = await _userManager.GetRolesAsync(user);
                 var token = GenerateJwtToken(user, roles);
-                return Ok(new { Token = token });
+                return Ok(new { Token = token, user });
 
             }
             return Unauthorized("Invalid login attempt.");

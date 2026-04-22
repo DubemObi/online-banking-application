@@ -1,0 +1,1408 @@
+{
+  "info": {
+    "_postman_id": "13035f84-d9f1-440a-a175-80ecc4dce092",
+    "name": "Banking API New",
+    "description": "Complete Banking Application API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "35310420"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password123!\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"1234567890\",\n  \"dateOfBirth\": \"1990-01-01\",\n  \"address\": \"123 Main St\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/verify-email?userId=USER_ID&token=TOKEN",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "verify-email"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "USER_ID"
+                },
+                {
+                  "key": "token",
+                  "value": "TOKEN"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/delete-user/user@example.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "delete-user",
+                "user@example.com"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/USER_ID",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "USER_ID"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"USER_ID\",\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"email\": \"user@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user/USER_ID",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "USER_ID"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bank Accounts",
+      "item": [
+        {
+          "name": "Get All Bank Accounts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bankaccount",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bankaccount"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Bank Account by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bankaccount/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bankaccount",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Bank Account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountNumber\": \"ACC123456\",\n  \"accountName\": \"Savings Account\",\n  \"accountStatus\": \"Active\",\n  \"accountType\": \"Savings\",\n  \"userId\": \"USER_ID\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bankaccount",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bankaccount"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Bank Account",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": 1,\n  \"accountNumber\": \"ACC123456\",\n  \"accountName\": \"Updated Savings Account\",\n  \"accountStatus\": \"Active\",\n  \"accountType\": \"Savings\",\n  \"userId\": \"USER_ID\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bankaccount/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bankaccount",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Bank Account",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bankaccount/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bankaccount",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cards",
+      "item": [
+        {
+          "name": "Get All Cards",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/card",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "card"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Card by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/card/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "card",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Card",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cardNumber\": \"4532123456789010\",\n  \"last4Digits\": \"9010\",\n  \"cardType\": \"Debit\",\n  \"cardBrand\": \"Visa\",\n  \"expiryDate\": \"12/25\",\n  \"cvv\": \"123\",\n  \"pin\": \"1234\",\n  \"userId\": \"USER_ID\",\n  \"bankAccountId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/card",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "card"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Card",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"cardNumber\": \"4532123456789010\",\n  \"last4Digits\": \"9010\",\n  \"cardType\": \"Debit\",\n  \"cardBrand\": \"Visa\",\n  \"expiryDate\": \"12/26\",\n  \"cvv\": \"123\",\n  \"pin\": \"1234\",\n  \"userId\": \"USER_ID\",\n  \"bankAccountId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/card/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "card",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Card",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/card/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "card",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Card Requests",
+      "item": [
+        {
+          "name": "Get All Card Requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cardrequest",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cardrequest"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Card Request by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cardrequest/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cardrequest",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Card Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"USER_ID\",\n  \"bankAccountId\": 1,\n  \"cardType\": \"Debit\",\n  \"status\": \"Pending\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cardrequest",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cardrequest"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Card Request",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"userId\": \"USER_ID\",\n  \"bankAccountId\": 1,\n  \"cardType\": \"Credit\",\n  \"status\": \"Pending\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cardrequest/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cardrequest",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Card Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cardRequestId\": 1,\n  \"approved\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cardrequest/approve",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cardrequest",
+                "approve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Card Request",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cardrequest/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cardrequest",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Loans",
+      "item": [
+        {
+          "name": "Get All Loans",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/loan",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "loan"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Loan by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/loan/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "loan",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Loan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"principalAmount\": 50000,\n  \"durationInMonths\": 24,\n  \"bankAccountId\": 1,\n  \"userId\": \"USER_ID\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/loan",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "loan"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Loan",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"principalAmount\": 50000,\n  \"durationInMonths\": 24,\n  \"bankAccountId\": 1,\n  \"userId\": \"USER_ID\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/loan/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "loan",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Loan",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/loan/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "loan",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Loan Requests",
+      "item": [
+        {
+          "name": "Get All Loan Requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/loanrequest",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "loanrequest"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Loan Request by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/loanrequest/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "loanrequest",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Loan Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"USER_ID\",\n  \"bankAccountId\": 1,\n  \"principalAmount\": 50000,\n  \"durationInMonths\": 24,\n  \"status\": \"Pending\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/loanrequest",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "loanrequest"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Loan Request",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"userId\": \"USER_ID\",\n  \"bankAccountId\": 1,\n  \"principalAmount\": 50000,\n  \"durationInMonths\": 24,\n  \"status\": \"Pending\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/loanrequest/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "loanrequest",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Loan Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loanRequestId\": 1,\n  \"isApproved\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/loanrequest/approve",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "loanrequest",
+                "approve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Loan Request",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/loanrequest/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "loanrequest",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Get All Transactions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/transaction",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "transaction"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Transaction by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/transaction/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "transaction",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deposit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": 1,\n  \"amount\": 1000,\n  \"transactionType\": \"Deposit\",\n  \"status\": \"Completed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/transaction/Deposit",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "transaction",
+                "Deposit"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Withdraw",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": 1,\n  \"amount\": 500,\n  \"transactionType\": \"Withdraw\",\n  \"status\": \"Completed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/transaction/Withdraw",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "transaction",
+                "Withdraw"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Transfer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": 2043,\n  \"amount\": 7231.92993525862,\n  \"transactionId\": 3397,\n  \"status\": 1,\n  \"transactionType\": 2,\n  \"timestamp\": \"1967-03-16T01:44:53.694Z\",\n  \"description\": \"string\",\n  \"reference\": \"string\",\n  \"bankAccount\": {\n    \"accountName\": \"string\",\n    \"accountNumber\": \"string\",\n    \"accountId\": 5992,\n    \"accountBalance\": 9810.930310804753,\n    \"rowVersion\": \"string\",\n    \"createdAt\": \"2011-11-05T14:51:49.842Z\",\n    \"accountType\": 1,\n    \"accountStatus\": 2,\n    \"userId\": 2651\n  },\n  \"recipientAccountId\": 1764,\n  \"recipientAccountNumber\": \"string\",\n  \"recipientAccount\": {\n    \"accountName\": \"string\",\n    \"accountNumber\": \"string\",\n    \"accountId\": 4395,\n    \"accountBalance\": 5410.152800147876,\n    \"rowVersion\": \"string\",\n    \"createdAt\": \"1998-01-08T20:21:10.567Z\",\n    \"accountType\": 2,\n    \"accountStatus\": 2,\n    \"userId\": 4755\n  }\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Transaction/Transfer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Transaction",
+                "Transfer"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"accountId\": 2043,\n  \"amount\": 7231.92993525862,\n  \"transactionId\": 3397,\n  \"status\": 1,\n  \"transactionType\": 2,\n  \"timestamp\": \"1967-03-16T01:44:53.694Z\",\n  \"description\": \"string\",\n  \"reference\": \"string\",\n  \"bankAccount\": {\n    \"accountName\": \"string\",\n    \"accountNumber\": \"string\",\n    \"accountId\": 5992,\n    \"accountBalance\": 9810.930310804753,\n    \"rowVersion\": \"string\",\n    \"createdAt\": \"2011-11-05T14:51:49.842Z\",\n    \"accountType\": 1,\n    \"accountStatus\": 2,\n    \"userId\": 2651\n  },\n  \"recipientAccountId\": 1764,\n  \"recipientAccountNumber\": \"string\",\n  \"recipientAccount\": {\n    \"accountName\": \"string\",\n    \"accountNumber\": \"string\",\n    \"accountId\": 4395,\n    \"accountBalance\": 5410.152800147876,\n    \"rowVersion\": \"string\",\n    \"createdAt\": \"1998-01-08T20:21:10.567Z\",\n    \"accountType\": 2,\n    \"accountStatus\": 2,\n    \"userId\": 4755\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Transaction/Transfer",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Transaction",
+                    "Transfer"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"accountId\": 2611,\n  \"amount\": 160.87625409328066,\n  \"transactionId\": 5445,\n  \"status\": 3,\n  \"transactionType\": 2,\n  \"timestamp\": \"1984-08-21T07:22:27.508Z\",\n  \"description\": \"string\",\n  \"reference\": \"string\",\n  \"bankAccount\": {\n    \"accountName\": \"string\",\n    \"accountNumber\": \"string\",\n    \"accountId\": 1393,\n    \"accountBalance\": 1756.9076149690877,\n    \"rowVersion\": \"string\",\n    \"createdAt\": \"1993-05-31T03:41:07.888Z\",\n    \"accountType\": 2,\n    \"accountStatus\": 1,\n    \"userId\": 8836\n  },\n  \"recipientAccountId\": 6640,\n  \"recipientAccount\": {\n    \"accountName\": \"string\",\n    \"accountNumber\": \"string\",\n    \"accountId\": 2836,\n    \"accountBalance\": 3517.079997625174,\n    \"rowVersion\": \"string\",\n    \"createdAt\": \"1972-06-15T10:14:39.891Z\",\n    \"accountType\": 2,\n    \"accountStatus\": 3,\n    \"userId\": 8990\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Roles",
+      "item": [
+        {
+          "name": "Get All Roles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/roles",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Role by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/roles/ROLE_ID",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles",
+                "ROLE_ID"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "\"Manager\""
+            },
+            "url": {
+              "raw": "{{base_url}}/api/roles",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Role",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roleId\": \"ROLE_ID\",\n  \"newRoleName\": \"UpdatedManager\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/roles",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Role to User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"USER_ID\",\n  \"roleName\": \"Manager\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/roles/assign-role-to-user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles",
+                "assign-role-to-user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Role",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/roles?roleId=ROLE_ID",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles"
+              ],
+              "query": [
+                {
+                  "key": "roleId",
+                  "value": "ROLE_ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5114"
+    },
+    {
+      "key": "jwtToken",
+      "value": ""
+    }
+  ]
+}

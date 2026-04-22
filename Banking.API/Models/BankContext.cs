@@ -61,6 +61,22 @@ namespace Banking.Models
                 .HasForeignKey(b => b.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Loan>()
+                .Property(l => l.PrincipalAmount)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Loan>()
+                .Property(l => l.InterestRate)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Loan>()
+                .Property(l => l.MonthlyInstallment)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<LoanRequest>()
+                .Property(lr => lr.PrincipalAmount)
+                .HasColumnType("decimal(18,2)");
+
             // Configure Loan relationships
             modelBuilder.Entity<Loan>()
                 .HasOne(l => l.User)

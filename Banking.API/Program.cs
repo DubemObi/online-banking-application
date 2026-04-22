@@ -7,8 +7,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using DotNetEnv;
 using Banking.Repositories;
+using Banking.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.OpenApi.Models;
 
 DotNetEnv.Env.Load();
 
@@ -17,7 +19,35 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Banking API", Version = "v1" });
+
+    // Add the "Authorize" button to Swagger UI
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 builder.Services.AddControllers();
 
 if (string.IsNullOrEmpty(builder.Configuration.GetConnectionString("DefaultConnection")))
@@ -67,7 +97,8 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy
-                .WithOrigins("http://localhost:3000") // React dev server
+                .WithOrigins("http://localhost:5173",
+    "https://your-app.vercel.app") // React dev server
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
@@ -105,21 +136,39 @@ builder.Services.AddRateLimiter(options =>
 
 var app = builder.Build();
 
+app.MapGet("/health", async (IServiceProvider sp) =>
+{
+    var status = new Dictionary<string, string> { { "Status", "Healthy" } };
+    try
+    {
+        using var scope = sp.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<BankContext>();
+        var canConnect = await context.Database.CanConnectAsync();
+        status.Add("Database", canConnect ? "Connected" : "Disconnected");
+    }
+    catch (Exception ex)
+    {
+        status.Add("DatabaseError", ex.Message);
+    }
+    return Results.Ok(status);
+});
+
+app.UseCors("AllowFrontend");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseCors("AllowFrontend");
 
 
 // Configure the HTTP request pipeline.
 // if (app.Environment.IsDevelopment())
 // {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 // }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Disabled for ACI compatibility
 
 app.UseRateLimiter();
 
@@ -144,23 +193,15 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast")
 .WithOpenApi();
 
-// Automatic Database Migration for Production (e.g., Azure SQL)
-using (var scope = app.Services.CreateScope())
+// Seed the database
+try
 {
-    var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<BankContext>();
-        if (context.Database.IsSqlServer() || context.Database.IsSqlite())
-        {
-            context.Database.Migrate();
-        }
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating the database.");
-    }
+    await DbInitializer.SeedData(app.Services, app.Configuration);
+}
+catch (Exception ex)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred during database seeding.");
 }
 
 app.Run();
